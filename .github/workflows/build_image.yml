@@ -29,5 +29,5 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: reloadttcr.azurecr.io/nopcommerce:latest
+        tags: reloadttcr.azurecr.io/nopcommerce_coverage:latest
         platforms: linux/amd64
