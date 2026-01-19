@@ -1,0 +1,33 @@
+# This workflow will build and push a Docker image to Azure Container Registry
+
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Login to Azure Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: reloadttcr.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: reloadttcr.azurecr.io/nopcommerce:latest
+        platforms: linux/amd64

@@ -1,18 +1,18 @@
-# create the build instance 
+# create the build instance
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
-WORKDIR /src                                                                    
+WORKDIR /src
 COPY ./src ./
 
-# build solution   
-RUN dotnet build NopCommerce.sln --no-incremental -c Release
+# build solution
+RUN dotnet build NopCommerce.sln --no-incremental -c Debug
 
 # publish project
-WORKDIR /src/Presentation/Nop.Web   
-RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
+WORKDIR /src/Presentation/Nop.Web
+RUN dotnet publish Nop.Web.csproj -c Debug -o /app/published
 
 WORKDIR /app/published
 
@@ -32,8 +32,8 @@ RUN chmod 775 App_Data \
               wwwroot/images/uploaded \
 			  wwwroot/sitemaps
 
-# create the runtime instance 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime 
+# create the runtime instance
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS runtime
 
 # add globalization support
 RUN apk add --no-cache icu-libs icu-data-full
@@ -43,12 +43,21 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 RUN apk add tiff --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/main/ --allow-untrusted
 RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
 RUN apk add libc-dev tzdata gcompat --no-cache
+RUN apk add libsm-dev libxrender libxext-dev libxml2
 
 WORKDIR /app
 
 COPY --from=build /app/published .
 
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
 ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
-                            
-ENTRYPOINT ["dotnet", "Nop.Web.dll"]
+
+RUN dotnet tool install --tool-path /usr/local/bin dotnet-coverage
+RUN /usr/local/bin/dotnet-coverage instrument --session-id test_1 Nop.Web.dll
+
+RUN dotnet tool install --tool-path /tmp/tools dotnet-reportgenerator-globaltool
+
+ENTRYPOINT "/entrypoint.sh"

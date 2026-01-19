@@ -1,0 +1,2 @@
+ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
+exec /usr/local/bin/dotnet-coverage collect --session-id test_1 -f xml -o /coverage/test_1.xml -l /coverage/test_1.log -ll Verbose dotnet Nop.Web.dll
