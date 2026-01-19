@@ -49,6 +49,9 @@ WORKDIR /app
 
 COPY --from=build /app/published .
 
+# We need access to source to generate coverage reports
+COPY --from=build /src /src
+
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
 
