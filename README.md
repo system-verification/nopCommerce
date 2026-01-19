@@ -1,6 +1,16 @@
 ﻿﻿nopCommerce: free and open-source eCommerce solution
 ===========
 
+# System Verification - Code Coverage Test
+
+* Take a snapshot of the coverage
+`docker exec nopcommerce_web_coverage dotnet-coverage snapshot test_1 --reset -o /coverage/test_1.xml`
+
+The coverage is place in the *coverage*-folder in the users home directory.
+
+* Generate the coverage report
+`docker exec nopcommerce_web_coverage /tmp/tools/reportgenerator -reports:/coverage/test_1.xml -targetdir:/coverage/html -sourcedirs:/src/Presentation/Nop.Web`
+
 [nopCommerce](https://www.nopcommerce.com/?utm_source=github&utm_medium=content&utm_campaign=homepage) is the best open-source eCommerce platform. nopCommerce is free, and it is the most popular ASP.NET Core shopping cart.
 
 ![nopCommerce demo](https://www.nopcommerce.com/images/github/responsive_devices_codeplex.png#v1)
