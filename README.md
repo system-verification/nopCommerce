@@ -9,7 +9,7 @@
 The coverage is place in the *coverage*-folder in the users home directory.
 
 * Generate the coverage report
-`docker exec nopcommerce_web_coverage /tmp/tools/reportgenerator -reports:/coverage/test_1.xml -targetdir:/coverage/html -sourcedirs:/src/Presentation/Nop.Web`
+`docker exec nopcommerce_web_coverage /tmp/tools/reportgenerator -reports:/coverage/test_1.xml -targetdir:/coverage/html -sourcedirs:/src/Presentation/Nop.Web -assemblyfilters:+Nop*`
 
 [nopCommerce](https://www.nopcommerce.com/?utm_source=github&utm_medium=content&utm_campaign=homepage) is the best open-source eCommerce platform. nopCommerce is free, and it is the most popular ASP.NET Core shopping cart.
 

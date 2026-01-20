@@ -1,5 +1,5 @@
 # create the build instance
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0-alpine
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -32,9 +32,6 @@ RUN chmod 775 App_Data \
               wwwroot/images/uploaded \
 			  wwwroot/sitemaps
 
-# create the runtime instance
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS runtime
-
 # add globalization support
 RUN apk add --no-cache icu-libs icu-data-full
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
@@ -45,12 +42,7 @@ RUN apk add libgdiplus --no-cache --repository http://dl-3.alpinelinux.org/alpin
 RUN apk add libc-dev tzdata gcompat --no-cache
 RUN apk add libsm-dev libxrender libxext-dev libxml2
 
-WORKDIR /app
-
-COPY --from=build /app/published .
-
-# We need access to source to generate coverage reports
-COPY --from=build /src /src
+WORKDIR /app/published
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
