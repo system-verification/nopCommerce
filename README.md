@@ -6,7 +6,7 @@
 * Take a snapshot of the coverage
 `docker exec nopcommerce_web_coverage dotnet-coverage snapshot test_1 --reset -o /coverage/test_1.xml`
 
-The coverage is place in the *coverage*-folder in the users home directory.
+The coverage is placed in the *coverage*-folder in the users home directory.
 
 * Generate the coverage report
 `docker exec nopcommerce_web_coverage /tmp/tools/reportgenerator -reports:/coverage/test_1.xml -targetdir:/coverage/html -sourcedirs:/src/Presentation/Nop.Web -assemblyfilters:+Nop*`
